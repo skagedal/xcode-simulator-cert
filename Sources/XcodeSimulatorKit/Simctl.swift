@@ -18,11 +18,6 @@ struct Simctl {
             throw Error.listDevices(errorOutput: errorOutput)
         }
 
-        switch result.output {
-        case .success(let bytes):
-            return Data(bytes)
-        case .failure(let error):
-            throw error
-        }
+        return Data(try result.output.dematerialize())
     }
 }
