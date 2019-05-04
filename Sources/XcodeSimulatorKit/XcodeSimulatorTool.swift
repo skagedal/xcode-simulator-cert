@@ -1,4 +1,6 @@
 import Foundation
+import Basic
+import SPMUtility
 
 public class XcodeSimulatorTool {
     private let arguments: [String]
@@ -8,7 +10,33 @@ public class XcodeSimulatorTool {
     }
 
     public func run() -> Int32 {
-        print("Hello from XcodeSimulatorTool")
+        let commandName = URL(fileURLWithPath: arguments.first!).lastPathComponent
+        let arguments = Array(self.arguments.dropFirst())
+
+        do {
+            let options = try CommandLineOptions.parse(
+                commandName: commandName,
+                arguments: arguments
+            )
+            try run(with: options)
+        } catch let error as CommandLineOptions.Error {
+            stderrStream.write("error: \(error.underlyingError.localizedDescription)\n\n")
+            error.printUsage(on: stderrStream)
+            return 1
+        } catch {
+            return 2
+        }
         return 0
+    }
+
+    private func run(with options: CommandLineOptions) throws {
+        switch options.subCommand {
+        case .noCommand:
+            options.printUsage(on: stdoutStream)
+        case .version:
+            print("xcode-simulator-tool version 0.1")
+        case .listDevices:
+            print("Listing devices")
+        }
     }
 }
