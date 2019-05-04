@@ -11,7 +11,8 @@ let package = Package(
        )
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-package-manager.git", from: "0.3.0")
+        // There is no tagged release of Swift 5's SwiftPM yet, so let's use this for now.
+        .package(url: "https://github.com/apple/swift-package-manager.git", .branch("swift-5.0-branch"))
     ],
     targets: [
         .target(
@@ -27,7 +28,7 @@ let package = Package(
         .target(
             name: "XcodeSimulatorKit",
             dependencies: [
-                "Utility"
+                "SPMUtility"
             ]
         ),
 
