@@ -7,7 +7,26 @@ struct Simctl {
         case listDevices(errorOutput: String)
     }
 
-    static func listDevices() throws -> Data {
+    struct DeviceList: Codable {
+        var devices: [String: [Device]]
+    }
+
+    struct Device: Codable {
+        enum State: String, Codable {
+            case shutdown = "Shutdown"
+            case booted = "Booted"
+        }
+        var isAvailable: Bool
+        var name: String
+        var udid: String
+        var state: State
+    }
+
+    static func listDevices() throws -> DeviceList {
+        return try parseDeviceList(readListDevices())
+    }
+
+    static func readListDevices() throws -> Data {
         let process = Process(
             args: "xcrun", "simctl", "list", "--json", "devices"
         )
@@ -19,5 +38,10 @@ struct Simctl {
         }
 
         return Data(try result.output.dematerialize())
+    }
+
+    static func parseDeviceList(_ data: Data) throws -> DeviceList {
+        let decoder = JSONDecoder()
+        return try decoder.decode(DeviceList.self, from: data)
     }
 }

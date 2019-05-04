@@ -36,7 +36,7 @@ public class XcodeSimulatorTool {
         case .version:
             print("xcode-simulator-tool version 0.1")
         case .listDevices:
-            print("Listing devices")
+            try ListDevicesCommand().run()
         }
     }
 }
