@@ -2,11 +2,23 @@ import Foundation
 import Basic
 import SPMUtility
 
+struct FilteringOptions {
+    enum Availability: String, StringEnumArgument {
+        case yes
+        case no
+        case all
+
+        public static var completion: ShellCompletion = .none
+    }
+
+    var availability: Availability = .yes
+}
+
 struct CommandLineOptions {
     enum SubCommand {
         case noCommand
         case version
-        case listDevices
+        case command(Command)
     }
 
     struct Error: Swift.Error {
@@ -22,9 +34,12 @@ struct CommandLineOptions {
             argumentParser.printUsage(on: stream)
         }
     }
+    struct NoCommandError: Swift.Error { }
 
     private let parser: ArgumentParser
     private(set) var subCommand: SubCommand
+
+    private static let allCommands: [Command] = [ListDevicesCommand()]
 
     static func parse(commandName: String, arguments: [String]) throws -> CommandLineOptions {
         let parser = ArgumentParser(
@@ -36,29 +51,53 @@ struct CommandLineOptions {
 
         let binder = ArgumentBinder<CommandLineOptions>()
 
-        binder.bind(option: parser.add(
-            option: "--version",
-            shortName: "-v",
-            kind: Bool.self,
-            usage: "Prints the version and exits"
-        ), to: { options, _ in
-            options.subCommand = .version
-        })
-
-        parser.add(
-            subparser: "list-devices",
-            overview: "List available Xcode Simulator devices"
+        binder.bind(
+            option: parser.add(
+                option: "--version",
+                kind: Bool.self,
+                usage: "Prints the version and exits"
+            ), to: { options, _ in
+                options.subCommand = .version
+            }
         )
 
-        var options = CommandLineOptions(parser: parser, subCommand: .noCommand)
-        do {
-            let result = try parser.parse(arguments)
-            switch result.subparser(parser) {
-            case "list-devices":
-                options.subCommand = .listDevices
-            default:
-                try binder.fill(parseResult: result, into: &options)
+        binder.bind(
+            parser: parser,
+            to: { options, subcommand in
+                print("Parsed subcommand: \(subcommand)")
             }
+        )
+
+        for command in allCommands {
+            let subparser = parser.add(
+                subparser: command.name,
+                overview: command.overview
+            )
+            command.addOptions(to: subparser)
+        }
+
+        var options = CommandLineOptions(parser: parser, subCommand: .noCommand)
+        checkresult: do {
+            let result = try parser.parse(arguments)
+            try binder.fill(parseResult: result, into: &options)
+
+            // In some cases like --version, we already have a subcommand and are thus already done
+            guard case SubCommand.noCommand = options.subCommand else {
+                break checkresult
+            }
+
+            guard
+                let subcommandName = result.subparser(parser),
+                var command = allCommands.first(where: { $0.name == subcommandName })
+            else {
+                throw Error(
+                    underlyingError: NoCommandError(),
+                    argumentParser: parser
+                )
+            }
+
+            try command.fillParseResult(result)
+            options.subCommand = SubCommand.command(command)
         } catch {
             throw Error(underlyingError: error, argumentParser: parser)
         }
