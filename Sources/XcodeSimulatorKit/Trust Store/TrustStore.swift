@@ -42,17 +42,11 @@ struct TrustStore {
             }
         }
 
-        func listCertificates() throws {
-            for certificate in try connection.prepare(tsettings) {
-                guard let blob = certificate[dataColumn] else {
-                    print("Couldn't get data blob from row...")
-                    continue
+        func certificates() throws -> [Certificate] {
+            return try connection.prepare(tsettings).compactMap { row in
+                try row[dataColumn].map { blob in
+                    try Certificate(Data(blob.bytes))
                 }
-                let data = Data(blob.bytes)
-                let cert = try SecCertificate.read(data: data)
-                cert.printInfo()
-                let count = blob.bytes.count
-                print(" - \(count) bytes")
             }
         }
     }

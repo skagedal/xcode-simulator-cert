@@ -64,7 +64,7 @@ struct CommandLineOptions {
         binder.bind(
             parser: parser,
             to: { _, subcommand in
-                print("Parsed subcommand: \(subcommand)")
+//                print("Parsed subcommand: \(subcommand)")
             }
         )
 

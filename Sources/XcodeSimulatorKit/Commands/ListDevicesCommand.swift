@@ -34,13 +34,25 @@ struct ListDevicesCommand: Command {
                 print(" - \(device.name)")
                 let trustStore = TrustStore(uuid: device.udid)
                 if trustStore.exists {
-                    if let store = try? trustStore.open(), store.isValid() {
-                        try? store.listCertificates()
-                    } else {
-                        print("   - Invalid trust store exists at \(trustStore.path)")
-                    }
+                    try listCertificates(in: trustStore)
                 }
             }
+        }
+    }
+
+    private func listCertificates(in trustStore: TrustStore) throws {
+        let store = try trustStore.open()
+        guard store.isValid() else {
+            return print("   Invalid trust store at \(trustStore.path)")
+        }
+
+        var didPrintHeader = false
+        for certificate in try store.certificates() {
+            if !didPrintHeader {
+                print("   Certificates:")
+                didPrintHeader = true
+            }
+            print("    - \(certificate.subjectSummary ?? "<unknown certificate>")")
         }
     }
 }

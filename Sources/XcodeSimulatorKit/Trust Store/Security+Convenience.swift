@@ -5,37 +5,39 @@
 import Foundation
 import Security
 
-enum SecurityError: LocalizedError {
-    case invalidDERX509
-    case unknown
+struct Certificate {
+    enum Error: LocalizedError {
+        case invalidDERX509
+        case unknown
 
-    var errorDescription: String? {
-        switch self {
-        case .invalidDERX509:
-            return "Given data was not a valid DER encoded X.509 certificate"
-        case .unknown:
-            return "Operation completed with an unknown error from the Security framework"
+        var errorDescription: String? {
+            switch self {
+            case .invalidDERX509:
+                return "Given data was not a valid DER encoded X.509 certificate"
+            case .unknown:
+                return "Operation completed with an unknown error from the Security framework"
+            }
         }
     }
-}
 
-extension SecCertificate {
-    static func read(data: Data) throws -> SecCertificate {
+    private let certificate: SecCertificate
+
+    init(_ data: Data) throws {
         guard let certificate = SecCertificateCreateWithData(nil, data as CFData) else {
-            throw SecurityError.invalidDERX509
+            throw Error.invalidDERX509
         }
-        return certificate
+        self.certificate = certificate
     }
 
     var subjectSummary: String? {
-        return SecCertificateCopySubjectSummary(self) as String?
+        return SecCertificateCopySubjectSummary(certificate) as String?
     }
 
     func normalizedSubjectSequence() throws -> Data {
         var error: Unmanaged<CFError>?
-        guard let data = SecCertificateCopyNormalizedSubjectContent(self, &error) else {
+        guard let data = SecCertificateCopyNormalizedSubjectContent(certificate, &error) else {
             guard let error = error else {
-                throw SecurityError.unknown
+                throw Error.unknown
             }
             throw error.takeRetainedValue()
         }
