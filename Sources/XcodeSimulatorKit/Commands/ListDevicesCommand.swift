@@ -34,7 +34,11 @@ struct ListDevicesCommand: Command {
                 print(" - \(device.name)")
                 let trustStore = TrustStore(uuid: device.udid)
                 if trustStore.exists {
-                    print(" - Trust store exists at \(trustStore.path)")
+                    if let store = try? trustStore.open(), store.isValid() {
+                        try? store.listCertificates()
+                    } else {
+                        print("   - Invalid trust store exists at \(trustStore.path)")
+                    }
                 }
             }
         }
