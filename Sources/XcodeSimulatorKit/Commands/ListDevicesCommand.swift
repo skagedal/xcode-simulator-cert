@@ -32,6 +32,10 @@ struct ListDevicesCommand: Command {
             print("\(runtime):")
             for device in filteredDevices {
                 print(" - \(device.name)")
+                let trustStore = TrustStore(uuid: device.udid)
+                if trustStore.exists {
+                    print(" - Trust store exists at \(trustStore.path)")
+                }
             }
         }
     }
