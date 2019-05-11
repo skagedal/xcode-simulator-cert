@@ -12,7 +12,8 @@ let package = Package(
     ],
     dependencies: [
         // There is no tagged release of Swift 5's SwiftPM yet, so let's use this for now.
-        .package(url: "https://github.com/apple/swift-package-manager.git", .branch("swift-5.0-branch"))
+        .package(url: "https://github.com/apple/swift-package-manager.git", .branch("swift-5.0-branch")),
+        .package(url: "https://github.com/stephencelis/SQLite.swift.git", from: "0.12.0"),
     ],
     targets: [
         .target(
@@ -28,7 +29,8 @@ let package = Package(
         .target(
             name: "XcodeSimulatorKit",
             dependencies: [
-                "SPMUtility"
+                "SPMUtility",
+                "SQLite"
             ]
         ),
 

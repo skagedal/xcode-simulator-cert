@@ -63,7 +63,7 @@ struct CommandLineOptions {
 
         binder.bind(
             parser: parser,
-            to: { options, subcommand in
+            to: { _, subcommand in
                 print("Parsed subcommand: \(subcommand)")
             }
         )

@@ -34,7 +34,7 @@ public class XcodeSimulatorTool {
         case .noCommand:
             options.printUsage(on: stdoutStream)
         case .version:
-            print("xcode-simulator-tool version 0.1")
+            print("xcode-simulator-tool version \(XcodeSimulatorTool.version)")
         case .command(let command):
             try command.run()
         }
