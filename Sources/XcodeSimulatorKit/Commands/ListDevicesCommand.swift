@@ -1,3 +1,7 @@
+//
+//  Copyright © 2019 Simon Kågedal Reimer. See LICENSE.
+//
+
 import Foundation
 import SPMUtility
 
@@ -47,12 +51,17 @@ struct ListDevicesCommand: Command {
         }
 
         var didPrintHeader = false
-        for certificate in try store.certificates() {
+        for row in try store.rows() {
             if !didPrintHeader {
                 print("   Certificates:")
                 didPrintHeader = true
             }
-            print("    - \(certificate.subjectSummary ?? "<unknown certificate>")")
+            do {
+                let certificate = try row.validatedCertificate()
+                print("    - \(certificate.subjectSummary ?? "<unknown certificate>")")
+            } catch {
+                print("    - Invalid row: \(error.localizedDescription)")
+            }
         }
     }
 }

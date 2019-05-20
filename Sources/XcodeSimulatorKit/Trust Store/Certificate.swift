@@ -44,6 +44,17 @@ struct Certificate {
         return data as Data
     }
 
+    func normalizedSubjectContent() throws -> Data {
+        var error: Unmanaged<CFError>?
+        guard let data = SecCertificateCopyNormalizedSubjectContent(certificate, &error) else {
+            guard let error = error else {
+                throw Error.unknown
+            }
+            throw error.takeRetainedValue()
+        }
+        return data as Data
+    }
+
     func printInfo() {
         if let summary = subjectSummary {
             print(summary)

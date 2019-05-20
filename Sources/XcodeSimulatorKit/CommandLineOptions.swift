@@ -1,3 +1,7 @@
+//
+//  Copyright © 2019 Simon Kågedal Reimer. See LICENSE.
+//
+
 import Foundation
 import Basic
 import SPMUtility
@@ -63,7 +67,7 @@ struct CommandLineOptions {
 
         binder.bind(
             parser: parser,
-            to: { _, subcommand in
+            to: { _, _ in
 //                print("Parsed subcommand: \(subcommand)")
             }
         )
