@@ -7,5 +7,5 @@ A description of this package.
 * PEM parser
 * `install-ca` command
 * Filter for os types
-* Find out why the argument parsin errors are not printed correctly
-
+* Find out why the argument parsing errors are not printed correctly
+* `remove` command
