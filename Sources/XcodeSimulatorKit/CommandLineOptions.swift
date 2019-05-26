@@ -43,7 +43,7 @@ struct CommandLineOptions {
     private let parser: ArgumentParser
     private(set) var subCommand: SubCommand
 
-    private static let allCommands: [Command] = [ListDevicesCommand()]
+    private static let allCommands: [Command] = [ListDevicesCommand(), InstallCACommand()]
 
     static func parse(commandName: String, arguments: [String]) throws -> CommandLineOptions {
         let parser = ArgumentParser(
