@@ -46,13 +46,15 @@ class RemoveCACommand: Command {
     }
 
     private func removeCertificates(in trustStore: TrustStore, deviceName: String, dry: Bool) throws {
-        for row in try trustStore.open().rows() {
+        let connection = try trustStore.open()
+        for row in try connection.rows() {
             let certificate = try row.validatedCertificate()
             let name = certificate.subjectSummary ?? "<unknown certificate>"
             if dry {
-                print(" - Would remove certificate \(name) from \(deviceName)")
+                print("Would remove certificate \(name) from \(deviceName).")
             } else {
-                print(" - REMOVING certificate \(name) from \(deviceName)")
+                print("Removing certificate \(name) from \(deviceName).")
+                try connection.removeCertificate(with: row.sha1)
             }
         }
     }

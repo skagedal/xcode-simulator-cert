@@ -69,5 +69,10 @@ struct TrustStore {
                 }
             }
         }
+
+        func removeCertificate(with sha1: Data) throws {
+            let query: Delete = tsettings.where(sha1Column == sha1.datatypeValue).delete()
+            try connection.run(query)
+        }
     }
 }
