@@ -71,8 +71,19 @@ struct TrustStore {
         }
 
         func removeCertificate(with sha1: Data) throws {
-            let query: Delete = tsettings.where(sha1Column == sha1.datatypeValue).delete()
+            let query = tsettings.where(sha1Column == sha1.datatypeValue).delete()
             try connection.run(query)
+        }
+
+        func addCertificate(_ certificate: Certificate) throws {
+            let row = try TrustStoreRow(certificate)
+            let insert = tsettings.insert(
+                subjColumn <- row.subj.datatypeValue,
+                sha1Column <- row.sha1.datatypeValue,
+                tsetColumn <- row.tset?.datatypeValue,
+                dataColumn <- row.data?.datatypeValue
+            )
+            try connection.run(insert)
         }
     }
 }

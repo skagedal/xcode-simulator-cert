@@ -26,12 +26,14 @@ struct Certificate {
         }
     }
 
+    let data: Data
     private let certificate: SecCertificate
 
     init(_ data: Data) throws {
         guard let certificate = SecCertificateCreateWithData(nil, data as CFData) else {
             throw Error.invalidDERX509
         }
+        self.data = data
         self.certificate = certificate
     }
 
@@ -69,7 +71,7 @@ struct Certificate {
         }
     }
 
-    static func load(from url: URL) throws -> SecCertificate {
+    static func load(from url: URL) throws -> Certificate {
         let data = try Data(contentsOf: url)
 
         var cfitems: CFArray?
@@ -83,7 +85,8 @@ struct Certificate {
         guard type == .itemTypeCertificate, let items = cfitems as? [SecCertificate], let item = items.first else {
             throw Error.notACertficate
         }
-        return item
+        let certData = SecCertificateCopyData(item) as Data
+        return try Certificate(certData)
     }
 
 }

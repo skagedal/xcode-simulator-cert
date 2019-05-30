@@ -35,6 +35,15 @@ extension TrustStoreRow {
         }
     }
 
+    init(_ certificate: Certificate) throws {
+        let data = certificate.data
+        self.data = data
+        self.sha1 = Digest.sha1(data)
+        self.tset = createTset()
+        self.subj = try subjectContent(from: certificate)
+        assert(isValidTset(self.tset!))
+    }
+
     func validatedCertificate() throws -> Certificate {
         guard let tset = tset else {
             throw Error.noTsetValue
@@ -43,10 +52,9 @@ extension TrustStoreRow {
             throw Error.noData
         }
         let certificate = try Certificate(data)
-        let subjectContent = try certificate.normalizedSubjectContent()
-        let tlv = try DERParser().parse(data: subjectContent)
+        let subject = try subjectContent(from: certificate)
 
-        guard tlv.data == subj else {
+        guard subject == subj else {
             throw Error.subjectContentDoesNotMatch
         }
 
@@ -60,13 +68,27 @@ extension TrustStoreRow {
 
         return certificate
     }
+}
 
-    private func isValidTset(_ data: Data) -> Bool {
-        do {
-            let plist = try PropertyListSerialization.propertyList(from: data, options: [], format: nil)
-            return plist is [Any]
-        } catch {
-            return false
-        }
+private func subjectContent(from certificate: Certificate) throws -> Data {
+    let subjectContent = try certificate.normalizedSubjectContent()
+    let tlv = try DERParser().parse(data: subjectContent)
+    return tlv.data
+}
+
+private func isValidTset(_ data: Data) -> Bool {
+    do {
+        let plist = try PropertyListSerialization.propertyList(from: data, options: [], format: nil)
+        return plist is [Any]
+    } catch {
+        return false
+    }
+}
+
+private func createTset() -> Data {
+    do {
+        return try PropertyListSerialization.data(fromPropertyList: [], format: .xml, options: 0)
+    } catch {
+        fatalError("Should be able to create propertylist")
     }
 }

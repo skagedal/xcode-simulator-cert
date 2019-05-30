@@ -8,6 +8,7 @@ import SPMUtility
 class InstallCACommand: Command {
     private struct Options {
         var path: String?
+        var dryRun: Bool = false
     }
     let name = "install-ca"
     let overview = "Install a Certificate Authority"
@@ -19,6 +20,14 @@ class InstallCACommand: Command {
     private var filteringOptions = FilteringOptions()
 
     func addOptions(to parser: ArgumentParser) {
+        binder.bind(option: parser.add(
+            option: "--dry-run",
+            kind: Bool.self,
+            usage: "Don't actually install any CA"
+            ), to: { options, dryRun in
+            options.dryRun = dryRun
+        })
+
         binder.bind(positional: parser.add(
             positional: "path",
             kind: String.self,
@@ -38,11 +47,16 @@ class InstallCACommand: Command {
     func run() throws {
         let url = URL(fileURLWithPath: options.path!)
         let certificate = try Certificate.load(from: url)
-        print(certificate)
+        let certificateName = certificate.subjectSummary ?? "<unknown certificate>"
 
-        print(filteringOptions)
         for device in try Simctl.flatListDevices().filter(using: filteringOptions) {
-            print(device.name)
+            if options.dryRun {
+                print("Would install \(certificateName) into \(device.name).")
+            } else {
+                print("Installing \(certificateName) into \(device.name).")
+                let trustStore = TrustStore(uuid: device.udid)
+                try trustStore.open().addCertificate(certificate)
+            }
         }
     }
 }
