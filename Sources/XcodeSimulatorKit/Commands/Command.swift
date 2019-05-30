@@ -13,6 +13,6 @@ protocol Command {
     var overview: String { get }
 
     func addOptions(to parser: ArgumentParser)
-    mutating func fillParseResult(_ parseResult: ArgumentParser.Result) throws
+    func fillParseResult(_ parseResult: ArgumentParser.Result) throws
     func run() throws
 }
