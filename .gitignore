@@ -2,3 +2,5 @@
 /.build
 /Packages
 /*.xcodeproj
+test-ca.crt
+test-ca.key
