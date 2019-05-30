@@ -10,13 +10,14 @@ struct InstallCACommand: Command {
     let overview = "Install a Certificate Authority"
 
     private let binder = ArgumentBinder<InstallCACommand>()
+    private var path: String?
 
     func addOptions(to parser: ArgumentParser) {
         binder.bind(positional: parser.add(
             positional: "path",
             kind: String.self
         ), to: { command, path in
-            print("Chosen path: \(path)")
+            command.path = path
         })
     }
 
@@ -25,6 +26,8 @@ struct InstallCACommand: Command {
     }
 
     func run() throws {
-        print("Running!")
+        let url = URL(fileURLWithPath: path!)
+        let certificate = try Certificate.load(from: url)
+        print(certificate)
     }
 }

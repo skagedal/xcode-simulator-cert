@@ -8,12 +8,18 @@ import Security
 struct Certificate {
     enum Error: LocalizedError {
         case invalidDERX509
+        case importError(OSStatus)
+        case notACertficate
         case unknown
 
         var errorDescription: String? {
             switch self {
             case .invalidDERX509:
                 return "Given data was not a valid DER encoded X.509 certificate"
+            case .importError(let status):
+                return "Error from SecItemImport: \(status)"
+            case .notACertficate:
+                return "SecItemImport gave something else than a certificate"
             case .unknown:
                 return "Operation completed with an unknown error from the Security framework"
             }
@@ -62,4 +68,22 @@ struct Certificate {
             print("<unknown certificate>")
         }
     }
+
+    static func load(from url: URL) throws -> SecCertificate {
+        let data = try Data(contentsOf: url)
+
+        var cfitems: CFArray?
+        var format = SecExternalFormat.formatUnknown
+        var type = SecExternalItemType.itemTypeUnknown
+
+        let status = SecItemImport(data as CFData, url.lastPathComponent as CFString, &format, &type, [], nil, nil, &cfitems)
+        guard status == errSecSuccess else {
+            throw Error.importError(status)
+        }
+        guard type == .itemTypeCertificate, let items = cfitems as? [SecCertificate], let item = items.first else {
+            throw Error.notACertficate
+        }
+        return item
+    }
+
 }

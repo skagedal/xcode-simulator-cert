@@ -1,7 +1,6 @@
 //
 //  Copyright © 2019 Simon Kågedal Reimer. See LICENSE.
 //
-// swiftlint:disable line_length
 
 import Foundation
 
