@@ -7,7 +7,7 @@ import SPMUtility
 
 class InstallCACommand: Command {
     private struct Options {
-        var path: String? = nil
+        var path: String?
     }
     let name = "install-ca"
     let overview = "Install a Certificate Authority"
@@ -41,5 +41,8 @@ class InstallCACommand: Command {
         print(certificate)
 
         print(filteringOptions)
+        for device in try Simctl.flatListDevices().filter(using: filteringOptions) {
+            print(device.name)
+        }
     }
 }

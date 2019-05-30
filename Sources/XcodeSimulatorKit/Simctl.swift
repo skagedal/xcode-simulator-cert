@@ -26,6 +26,10 @@ struct Simctl {
         var state: State
     }
 
+    static func flatListDevices() throws -> [Device] {
+        return try listDevices().devices.values.flatMap { $0 }
+    }
+
     static func listDevices() throws -> DeviceList {
         return try parseDeviceList(readListDevices())
     }

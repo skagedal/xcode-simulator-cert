@@ -24,7 +24,7 @@ public class XcodeSimulatorTool {
             )
             try run(with: options)
         } catch let error as CommandLineOptions.Error {
-            stderrStream.write("error: \(error.underlyingError.localizedDescription)\n\n")
+            stderrStream.write("error: \(error.underlyingError)\n\n")
             error.printUsage(on: stderrStream)
             return 1
         } catch {

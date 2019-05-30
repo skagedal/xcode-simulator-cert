@@ -6,30 +6,6 @@ import Foundation
 import Basic
 import SPMUtility
 
-struct FilteringOptions {
-    enum Availability: String, StringEnumArgument {
-        case yes
-        case no
-        case all
-
-        public static var completion: ShellCompletion = .none
-    }
-
-    var availability: Availability = .yes
-}
-
-extension ArgumentBinder where Options == FilteringOptions {
-    func bind(to options: inout FilteringOptions, parser: ArgumentParser) {
-        bind(option: parser.add(
-            option: "--availability",
-            kind: FilteringOptions.Availability.self,
-            usage: "Only list available devices? yes|no|all, defaults to all"
-        ), to: { options, availability in
-            options.availability = availability
-        })
-    }
-}
-
 struct CommandLineOptions {
     enum SubCommand {
         case noCommand
@@ -74,13 +50,6 @@ struct CommandLineOptions {
                 usage: "Prints the version and exits"
             ), to: { options, _ in
                 options.subCommand = .version
-            }
-        )
-
-        binder.bind(
-            parser: parser,
-            to: { _, _ in
-//                print("Parsed subcommand: \(subcommand)")
             }
         )
 

@@ -61,22 +61,3 @@ class ListDevicesCommand: Command {
         }
     }
 }
-
-extension FilteringOptions.Availability {
-    func matches(_ availability: Bool) -> Bool {
-        switch (self, availability) {
-        case (.yes, true), (.no, false), (.all, _):
-            return true
-        case (.yes, false), (.no, true):
-            return false
-        }
-    }
-}
-
-extension Sequence where Element == Simctl.Device {
-    func filter(using filteringOptions: FilteringOptions) -> [Simctl.Device] {
-        return filter { device in
-            filteringOptions.availability.matches(device.isAvailable)
-        }
-    }
-}
