@@ -4,7 +4,6 @@ A description of this package.
 
 ## TODO
 
-* Makefile
 * Brew formula
 * README
 * Filter for os types

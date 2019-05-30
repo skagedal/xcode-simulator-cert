@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version="0.1"
+version="0.1.0"
 
 cat > ./Sources/XcodeSimulatorKit/Version.swift <<EOF
 // 

@@ -5,6 +5,6 @@
 
 public extension XcodeSimulatorTool {
     static var version: String {
-        return "0.1"
+        return "0.1.0"
     }
 }
