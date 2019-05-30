@@ -24,16 +24,16 @@ extension ArgumentBinder where Options == FilteringOptions {
             option: "--availability",
             kind: FilteringOptions.Availability.self,
             usage: "Only affect available devices? yes|no|all, defaults to all"
-            ), to: { options, availability in
-                options.availability = availability
+        ), to: { options, availability in
+            options.availability = availability
         })
 
         bind(option: parser.add(
             option: "--device-name",
             kind: String.self,
             usage: "Only affect devices with an exact name"
-            ), to: { options, name in
-                options.deviceName = name
+        ), to: { options, name in
+            options.deviceName = name
         })
     }
 }

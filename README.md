@@ -7,6 +7,5 @@ A description of this package.
 * `install-ca` command
 * `remove-ca` command
 * Filter for os types
-* Find out why the argument parsing errors are not printed correctly
 * `--dry-run` option
 * `remove` command that removes simulators
