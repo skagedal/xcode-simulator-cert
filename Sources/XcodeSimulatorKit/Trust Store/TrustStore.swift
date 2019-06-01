@@ -85,5 +85,9 @@ struct TrustStore {
             )
             try connection.run(insert)
         }
+
+        func hasCertificate(with sha1: Data) throws -> Bool {
+            return try connection.pluck(tsettings.where(sha1Column == sha1.datatypeValue)) != nil
+        }
     }
 }

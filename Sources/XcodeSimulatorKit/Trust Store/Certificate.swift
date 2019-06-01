@@ -41,6 +41,10 @@ struct Certificate {
         return SecCertificateCopySubjectSummary(certificate) as String?
     }
 
+    var sha1: Data {
+        return Digest.sha1(data)
+    }
+    
     func normalizedSubjectSequence() throws -> Data {
         var error: Unmanaged<CFError>?
         guard let data = SecCertificateCopyNormalizedSubjectContent(certificate, &error) else {
