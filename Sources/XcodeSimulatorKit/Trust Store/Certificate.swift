@@ -9,6 +9,8 @@ struct Certificate {
     enum Error: LocalizedError {
         case invalidDERX509
         case importError(OSStatus)
+        case exportError(OSStatus)
+        case exportNoData
         case notACertficate
         case unknown
 
@@ -18,6 +20,10 @@ struct Certificate {
                 return "Given data was not a valid DER encoded X.509 certificate"
             case .importError(let status):
                 return "Error from SecItemImport: \(status)"
+            case .exportError(let status):
+                return "Error from SecItemExport: \(status)"
+            case .exportNoData:
+                return "No data returned from SecItemExport"
             case .notACertficate:
                 return "SecItemImport gave something else than a certificate"
             case .unknown:
@@ -44,7 +50,7 @@ struct Certificate {
     var sha1: Data {
         return Digest.sha1(data)
     }
-    
+
     func normalizedSubjectSequence() throws -> Data {
         var error: Unmanaged<CFError>?
         guard let data = SecCertificateCopyNormalizedSubjectContent(certificate, &error) else {
@@ -93,4 +99,17 @@ struct Certificate {
         return try Certificate(certData)
     }
 
+    func exportPEM() throws -> Data {
+        var cfData: CFData?
+        let status = withUnsafeMutablePointer(to: &cfData) { pointer in
+            SecItemExport(certificate, .formatX509Cert, .pemArmour, nil, pointer)
+        }
+        guard status == errSecSuccess else {
+            throw Error.exportError(status)
+        }
+        guard let data = cfData else {
+            throw Error.exportNoData
+        }
+        return data as Data
+    }
 }

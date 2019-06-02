@@ -34,6 +34,7 @@ struct CommandLineOptions {
     private static let allCommands: [Command] = [
         ListDevicesCommand(),
         InstallCACommand(),
+        ExportCACommand(),
         RemoveCACommand()
     ]
 
