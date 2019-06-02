@@ -36,7 +36,6 @@ class RemoveCACommand: Command {
     }
 
     func run() throws {
-        print(filteringOptions)
         for device in try Simctl.flatListDevices().filter(using: filteringOptions) {
             let trustStore = TrustStore(uuid: device.udid)
             if trustStore.exists {

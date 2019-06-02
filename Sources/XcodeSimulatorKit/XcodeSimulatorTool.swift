@@ -28,6 +28,7 @@ public class XcodeSimulatorTool {
             error.printUsage(on: stderrStream)
             return 1
         } catch {
+            debugPrint(error)
             return 2
         }
         return 0
