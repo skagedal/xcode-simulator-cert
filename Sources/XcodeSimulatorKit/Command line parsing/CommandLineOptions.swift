@@ -29,7 +29,8 @@ struct CommandLineOptions {
     struct NoCommandError: Swift.Error { }
 
     private let parser: ArgumentParser
-    private(set) var subCommand: SubCommand
+    fileprivate(set) var subCommand: SubCommand
+    fileprivate(set) var verbosity: Verbosity
 
     private static let allCommands: [Command] = [
         ListDevicesCommand(),
@@ -47,16 +48,7 @@ struct CommandLineOptions {
         )
 
         let binder = ArgumentBinder<CommandLineOptions>()
-
-        binder.bind(
-            option: parser.add(
-                option: "--version",
-                kind: Bool.self,
-                usage: "Prints the version and exits"
-            ), to: { options, _ in
-                options.subCommand = .version
-            }
-        )
+        binder.bind(parser)
 
         for command in allCommands {
             let subparser = parser.add(
@@ -66,7 +58,7 @@ struct CommandLineOptions {
             command.addOptions(to: subparser)
         }
 
-        var options = CommandLineOptions(parser: parser, subCommand: .noCommand)
+        var options = CommandLineOptions(parser: parser, subCommand: .noCommand, verbosity: .normal)
         checkresult: do {
             let result = try parser.parse(arguments)
             try binder.fill(parseResult: result, into: &options)
@@ -96,5 +88,30 @@ struct CommandLineOptions {
 
     func printUsage(on stream: OutputByteStream) {
         parser.printUsage(on: stream)
+    }
+}
+
+extension ArgumentBinder where Options == CommandLineOptions {
+    func bind(_ parser: ArgumentParser) {
+        bind(
+            option: parser.add(
+                option: "--version",
+                kind: Bool.self,
+                usage: "Prints the version and exits"
+            ), to: { options, _ in
+                options.subCommand = .version
+            }
+        )
+
+        bind(
+            option: parser.add(
+                option: "--verbosity",
+                kind: Verbosity.self,
+                usage: "Verbosity: silent|normal|loud, defaults to normal"
+            ), to: { options, verbosity in
+                options.verbosity = verbosity
+            }
+        )
+
     }
 }

@@ -36,7 +36,7 @@ class InstallCACommand: Command {
             options.path = path
         })
 
-        filteringBinder.bind(to: &filteringOptions, parser: parser)
+        filteringBinder.bind(parser)
     }
 
     func fillParseResult(_ parseResult: ArgumentParser.Result) throws {
@@ -44,7 +44,7 @@ class InstallCACommand: Command {
         try filteringBinder.fill(parseResult: parseResult, into: &filteringOptions)
     }
 
-    func run() throws {
+    func run(reporter: Reporter) throws {
         let url = URL(fileURLWithPath: options.path!)
         let certificate = try Certificate.load(from: url)
         let sha1 = certificate.sha1

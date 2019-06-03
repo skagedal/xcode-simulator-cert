@@ -19,7 +19,7 @@ struct FilteringOptions {
 }
 
 extension ArgumentBinder where Options == FilteringOptions {
-    func bind(to options: inout FilteringOptions, parser: ArgumentParser) {
+    func bind(_ parser: ArgumentParser) {
         bind(option: parser.add(
             option: "--availability",
             kind: FilteringOptions.Availability.self,

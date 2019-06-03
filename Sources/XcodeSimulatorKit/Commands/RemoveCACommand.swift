@@ -27,7 +27,7 @@ class RemoveCACommand: Command {
             options.dryRun = dryRun
         })
 
-        filteringBinder.bind(to: &filteringOptions, parser: parser)
+        filteringBinder.bind(parser)
     }
 
     func fillParseResult(_ parseResult: ArgumentParser.Result) throws {
@@ -35,7 +35,7 @@ class RemoveCACommand: Command {
         try filteringBinder.fill(parseResult: parseResult, into: &filteringOptions)
     }
 
-    func run() throws {
+    func run(reporter: Reporter) throws {
         for device in try Simctl.flatListDevices().filter(using: filteringOptions) {
             let trustStore = TrustStore(uuid: device.udid)
             if trustStore.exists {

@@ -21,7 +21,7 @@ class ExportCACommand: Command {
     private var exportedCertificates: Set<Data> = []
 
     func addOptions(to parser: ArgumentParser) {
-        filteringBinder.bind(to: &filteringOptions, parser: parser)
+        filteringBinder.bind(parser)
     }
 
     func fillParseResult(_ parseResult: ArgumentParser.Result) throws {
@@ -29,7 +29,7 @@ class ExportCACommand: Command {
         try filteringBinder.fill(parseResult: parseResult, into: &filteringOptions)
     }
 
-    func run() throws {
+    func run(reporter: Reporter) throws {
         exportedCertificates = []
         for device in try Simctl.flatListDevices().filter(using: filteringOptions) {
             exportCertificates(for: device)

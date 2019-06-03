@@ -14,15 +14,14 @@ class ListDevicesCommand: Command {
     private let filteringBinder = ArgumentBinder<FilteringOptions>()
 
     func addOptions(to parser: ArgumentParser) {
-        filteringBinder.bind(to: &filteringOptions, parser: parser)
+        filteringBinder.bind(parser)
     }
 
     func fillParseResult(_ parseResult: ArgumentParser.Result) throws {
         try filteringBinder.fill(parseResult: parseResult, into: &filteringOptions)
-//        try binder.fill(parseResult: parseResult, into: &self)
     }
 
-    func run() throws {
+    func run(reporter: Reporter) throws {
         let allDevices = try Simctl.listDevices()
         for (runtime, devices) in allDevices.devices {
             let filteredDevices = devices.filter(using: filteringOptions)

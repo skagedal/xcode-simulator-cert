@@ -41,7 +41,7 @@ public class XcodeSimulatorTool {
         case .version:
             print("xcode-simulator-tool version \(XcodeSimulatorTool.version)")
         case .command(let command):
-            try command.run()
+            try command.run(reporter: DefaultReporter(verbosity: options.verbosity))
         }
     }
 }

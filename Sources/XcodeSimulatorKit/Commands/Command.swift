@@ -14,5 +14,5 @@ protocol Command {
 
     func addOptions(to parser: ArgumentParser)
     func fillParseResult(_ parseResult: ArgumentParser.Result) throws
-    func run() throws
+    func run(reporter: Reporter) throws
 }
