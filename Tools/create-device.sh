@@ -1,1 +1,0 @@
-xcrun simctl create cert-test-iphone com.apple.CoreSimulator.SimDeviceType.iPhone-7 com.apple.CoreSimulator.SimRuntime.iOS-12-2
