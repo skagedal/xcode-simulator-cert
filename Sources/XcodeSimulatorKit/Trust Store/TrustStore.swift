@@ -20,6 +20,10 @@ struct TrustStore {
         return localFileSystem.exists(path)
     }
 
+    func createParentDirectories() throws {
+        try localFileSystem.createDirectory(path.parentDirectory, recursive: true)
+    }
+
     func open() throws -> Connection {
         return try Connection(openingPath: path.pathString)
     }

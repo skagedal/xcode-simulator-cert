@@ -6,7 +6,7 @@ import Foundation
 import SPMUtility
 
 class InstallCACommand: Command {
-    private struct Options {
+    struct Options {
         var path: String?
         var dryRun: Bool = false
     }
@@ -45,36 +45,11 @@ class InstallCACommand: Command {
     }
 
     func run(reporter: Reporter) throws {
-        let url = URL(fileURLWithPath: options.path!)
-        let certificate = try Certificate.load(from: url)
-        let sha1 = certificate.sha1
-
-        let certificateName = certificate.subjectSummary ?? "<unknown certificate>"
-
-        for device in try Simctl.flatListDevices().filter(using: filteringOptions) {
-            let trustStore = TrustStore(uuid: device.udid)
-            if !trustStore.exists && options.dryRun {
-                print("Would install '\(certificateName)' into '\(device.name)'.")
-                continue
-            }
-
-            let connection = try trustStore.open()
-            if try connection.hasCertificate(with: sha1) {
-                if options.dryRun {
-                    print("Would skip installing '\(certificateName)' into '\(device.name)' – it's already there.")
-                } else {
-                    print("Not installing '\(certificateName)' into '\(device.name)' – it's already there.")
-                }
-                continue
-            }
-
-            if options.dryRun {
-                print("Would install '\(certificateName)' into '\(device.name)'.")
-            } else {
-                print("Installing '\(certificateName)' into '\(device.name)'.")
-                try trustStore.open().addCertificate(certificate)
-            }
-        }
+        let runner = InstallCACommandRunner(
+            options: options,
+            filteringOptions: filteringOptions,
+            reporter: reporter
+        )
+        try runner.run()
     }
-
 }
