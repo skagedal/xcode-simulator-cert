@@ -46,6 +46,8 @@ class InstallCACommandRunner {
         let connection = try trustStore.open()
         reporter.info("Opened trust store.")
 
+        try connection.setupDatabaseIfNeeded(reporter: reporter)
+
         if try connection.hasCertificate(with: sha1) {
             if options.dryRun {
                 print("Would skip installing '\(certificateName)' into '\(device.name)' – it's already there.")

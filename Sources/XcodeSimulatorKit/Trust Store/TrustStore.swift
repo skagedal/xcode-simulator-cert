@@ -25,7 +25,7 @@ struct TrustStore {
     }
 
     func open() throws -> Connection {
-        return try Connection(openingPath: path.pathString)
+        return try Connection(openingPath: path)
     }
 
     class Connection {
@@ -38,8 +38,28 @@ struct TrustStore {
         private let tsetColumn = Expression<Blob?>("tset")
         private let dataColumn = Expression<Blob?>("data")
 
-        fileprivate init(openingPath path: String) throws {
-            connection = try SQLite.Connection(path)
+        private let needsCreation: Bool
+
+        fileprivate init(openingPath path: AbsolutePath) throws {
+            needsCreation = !localFileSystem.exists(path)
+            connection = try SQLite.Connection(path.pathString)
+        }
+
+        func setupDatabaseIfNeeded(reporter: Reporter) throws {
+            guard needsCreation else { return }
+            try connection.execute("""
+                BEGIN TRANSACTION;
+                CREATE TABLE tsettings (
+                    sha1 BLOB NOT NULL DEFAULT '',
+                    subj BLOB NOT NULL DEFAULT '',
+                    tset BLOB,
+                    data BLOB,
+                    PRIMARY KEY(sha1)
+                );
+                CREATE INDEX isubj ON tsettings(subj);
+                COMMIT TRANSACTION;
+                """
+            )
         }
 
         func isValid() -> Bool {

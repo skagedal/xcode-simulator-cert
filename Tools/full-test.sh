@@ -29,22 +29,22 @@ echo "${LOGO} Installing root certificate"
 CERT_PATH=`pwd`/test-ca.crt
 pushd .. >& /dev/null
 echo swift run xcode-simulator-tool --verbosity=loud install-ca ${CERT_PATH} --uuid=${UUID}
-echo Please do it yourself
-zsh
+swift run xcode-simulator-tool --verbosity=loud install-ca ${CERT_PATH} --uuid=${UUID}
 popd >& /dev/null
 
 # Booting
 
-echo "${LOGO} Booting simulator; exit subshell when it's done"
+echo "${LOGO} Booting simulator; press enter when done"
 xcrun simctl boot ${UUID}
 open /Applications/Xcode-10.2.1.app/Contents/Developer/Applications/Simulator.app
-zsh
+read
 
 # Opening the URL
 
-echo "${LOGO} Opening ${URL} in simulator; exit subshell when it's done"
+echo "${LOGO} Opening ${URL} in simulator.  This should now show the contents of this directory in Safari."
+echo "${LOGO} Press enter when done."
 xcrun simctl openurl ${UUID} ${URL}
-zsh
+read
 
 # Killing HTTP server
 
