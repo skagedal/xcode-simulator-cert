@@ -15,6 +15,7 @@ struct FilteringOptions {
     }
 
     var availability: Availability = .yes
+    var uuid: String?
     var deviceName: String?
 }
 
@@ -35,6 +36,14 @@ extension ArgumentBinder where Options == FilteringOptions {
         ), to: { options, name in
             options.deviceName = name
         })
+
+        bind(option: parser.add(
+            option: "--uuid",
+            kind: String.self,
+            usage: "Only affect device with exact UUID"
+        ), to: { options, uuid in
+            options.uuid = uuid
+        })
     }
 }
 
@@ -53,6 +62,9 @@ extension Sequence where Element == Simctl.Device {
     func filter(using filteringOptions: FilteringOptions) -> [Simctl.Device] {
         return filter { device in
             if let deviceName = filteringOptions.deviceName, deviceName != device.name {
+                return false
+            }
+            if let uuid = filteringOptions.uuid, uuid != device.udid {
                 return false
             }
             return filteringOptions.availability.matches(device.isAvailable)
