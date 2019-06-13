@@ -1,8 +1,13 @@
 #!/bin/bash
 
+if ! hash jq 2>/dev/null; then
+    echo "This script requires jq.  Do brew install jq."
+fi
+
+DEVICE_TYPE=`xcrun simctl list devicetypes "iPhone 8" --json | jq '.devicetypes[0].identifier' --raw-output`
+RUNTIME=`xcrun simctl list runtimes "iOS" --json | jq '.runtimes[0].identifier' --raw-output`
+
 LOGO="🧪 "
-DEVICE_TYPE=com.apple.CoreSimulator.SimDeviceType.iPhone-7
-RUNTIME=com.apple.CoreSimulator.SimRuntime.iOS-12-2
 URL='https://localhost:1443/'
 
 # HTTPS server
@@ -13,7 +18,7 @@ HTTP_SERVER_PID=$!
 
 # Create simulator
 
-echo "${LOGO} Creating simulator"
+echo "${LOGO} Creating simulator ($DEVICE_TYPE / $RUNTIME)"
 UUID=`xcrun simctl create cert-test-iphone ${DEVICE_TYPE} ${RUNTIME}`
 
 if [ $? -eq 0 ]; then
@@ -42,7 +47,7 @@ read
 # Opening the URL
 
 echo "${LOGO} Opening ${URL} in simulator.  This should now show the contents of this directory in Safari."
-echo "${LOGO} Press enter when done."
+echo "${LOGO} When confirmed, press enter to clean up, deleting this test simulator."
 xcrun simctl openurl ${UUID} ${URL}
 read
 
