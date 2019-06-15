@@ -6,7 +6,7 @@ build:
 	swift build -c release --disable-sandbox
 
 install: build
-	install ".build/release/xcode-simulator-cert" "$(bindir)"
+	install -d ".build/release/xcode-simulator-cert" "$(bindir)"
 
 uninstall:
 	rm -rf "$(bindir)/xcode-simulator-cert"
