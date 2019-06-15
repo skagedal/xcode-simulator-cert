@@ -9,6 +9,13 @@ RUNTIME=`xcrun simctl list runtimes "iOS" --json | jq '.runtimes[0].identifier' 
 
 LOGO="🧪 "
 URL='https://localhost:1443/'
+CERT_PATH=`pwd`/test-ca.crt
+
+# Generating cert
+
+echo "${LOGO} Generating self-signed certificate"
+
+openssl req -x509 -newkey rsa:4096 -keyout test-ca.key -out ${CERT_PATH} -days 365 -nodes -subj '/CN=localhost'
 
 # HTTPS server
 
@@ -31,7 +38,6 @@ fi
 # Installing 
 
 echo "${LOGO} Installing root certificate"
-CERT_PATH=`pwd`/test-ca.crt
 pushd .. >& /dev/null
 echo swift run xcode-simulator-tool --verbosity=loud install-ca ${CERT_PATH} --uuid=${UUID}
 swift run xcode-simulator-tool --verbosity=loud install-ca ${CERT_PATH} --uuid=${UUID}
