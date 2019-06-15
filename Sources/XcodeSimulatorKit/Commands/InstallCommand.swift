@@ -5,12 +5,12 @@
 import Foundation
 import SPMUtility
 
-class InstallCACommand: Command {
+class InstallCommand: Command {
     struct Options {
         var path: String?
         var dryRun: Bool = false
     }
-    let name = "install-ca"
+    let name = "install"
     let overview = "Install a Certificate Authority"
 
     private let binder = ArgumentBinder<Options>()
@@ -45,7 +45,7 @@ class InstallCACommand: Command {
     }
 
     func run(reporter: Reporter) throws {
-        let runner = InstallCACommandRunner(
+        let runner = InstallCommandRunner(
             options: options,
             filteringOptions: filteringOptions,
             reporter: reporter

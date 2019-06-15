@@ -2,18 +2,18 @@
 
 [![Swift 5 compatible][swift-badge]][Swift] [![Xcode 10.2 compatible][xcode-badge]][Xcode] 
 
-This is a tool to manage Xcode simulators and their [root certificates][RootCertificate]. 
+This is a tool to manage [root certificates][RootCertificate] in Xcode simulators. 
 
 If you have a certificate for your server in PEM format in a file `myhost.crt`, type:
 
 ```bash
-$ xcode-simulator-cert install-ca myhost.crt
+$ xcode-simulator-cert install myhost.crt
 ```
 
 It will then install the certificate in all your simulators. You can also specify a specific simulator:
 
 ```bash
-$ xcode-simulator-cert install-ca myhost.crt --device-name="iPhone 8"
+$ xcode-simulator-cert install myhost.crt --device-name="iPhone 8"
 ```
 
 There are also some other subcommands and options available. `--help` is your friend.

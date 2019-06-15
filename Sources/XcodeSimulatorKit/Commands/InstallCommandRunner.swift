@@ -4,13 +4,13 @@
 
 import Foundation
 
-class InstallCACommandRunner {
+class InstallCommandRunner {
     private let reporter: Reporter
-    private let options: InstallCACommand.Options
+    private let options: InstallCommand.Options
     private let filteringOptions: FilteringOptions
 
     init(
-        options: InstallCACommand.Options,
+        options: InstallCommand.Options,
         filteringOptions: FilteringOptions,
         reporter: Reporter) {
         self.reporter = reporter

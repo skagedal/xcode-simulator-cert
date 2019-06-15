@@ -33,10 +33,10 @@ struct CommandLineOptions {
     fileprivate(set) var verbosity: Verbosity
 
     private static let allCommands: [Command] = [
-        ListDevicesCommand(),
-        InstallCACommand(),
-        ExportCACommand(),
-        RemoveCACommand()
+        ListCommand(),
+        InstallCommand(),
+        ExportCommand(),
+        RemoveCommand()
     ]
 
     static func parse(commandName: String, arguments: [String]) throws -> CommandLineOptions {

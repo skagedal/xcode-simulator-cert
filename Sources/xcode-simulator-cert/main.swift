@@ -5,4 +5,4 @@
 import Foundation
 import XcodeSimulatorKit
 
-exit(XcodeSimulatorTool(arguments: CommandLine.arguments).run())
+exit(XcodeSimulatorCert(arguments: CommandLine.arguments).run())

@@ -3,7 +3,7 @@
 // Should not be under version control.
 //
 
-public extension XcodeSimulatorTool {
+public extension XcodeSimulatorCert {
     static var version: String {
         return "0.1.0"
     }

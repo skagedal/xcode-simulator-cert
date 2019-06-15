@@ -6,7 +6,7 @@ import Foundation
 import Basic
 import SPMUtility
 
-public class XcodeSimulatorTool {
+public class XcodeSimulatorCert {
     private let arguments: [String]
 
     public init(arguments: [String]) {
@@ -39,7 +39,7 @@ public class XcodeSimulatorTool {
         case .noCommand:
             options.printUsage(on: stdoutStream)
         case .version:
-            print("xcode-simulator-cert version \(XcodeSimulatorTool.version)")
+            print("xcode-simulator-cert version \(XcodeSimulatorCert.version)")
         case .command(let command):
             try command.run(reporter: DefaultReporter(verbosity: options.verbosity))
         }

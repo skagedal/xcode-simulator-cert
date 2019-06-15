@@ -6,10 +6,10 @@ import Foundation
 import Basic
 import SPMUtility
 
-class ExportCACommand: Command {
+class ExportCommand: Command {
     private struct Options {
     }
-    let name = "export-ca"
+    let name = "export"
     let overview = "Export Certificate Authorities"
 
     private let binder = ArgumentBinder<Options>()

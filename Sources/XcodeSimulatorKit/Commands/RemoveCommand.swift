@@ -5,11 +5,11 @@
 import Foundation
 import SPMUtility
 
-class RemoveCACommand: Command {
+class RemoveCommand: Command {
     private struct Options {
         var dryRun: Bool = false
     }
-    let name = "remove-ca"
+    let name = "remove"
     let overview = "Remove all Certificate Authorities from specified devices"
 
     private let binder = ArgumentBinder<Options>()

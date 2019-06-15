@@ -5,11 +5,11 @@
 import Foundation
 import SPMUtility
 
-class ListDevicesCommand: Command {
-    let name = "list-devices"
-    let overview = "List available Xcode Simulator devices"
+class ListCommand: Command {
+    let name = "list"
+    let overview = "List available certificates in Xcode Simulators"
 
-    private let binder = ArgumentBinder<ListDevicesCommand>()
+    private let binder = ArgumentBinder<ListCommand>()
     private var filteringOptions = FilteringOptions()
     private let filteringBinder = ArgumentBinder<FilteringOptions>()
 
