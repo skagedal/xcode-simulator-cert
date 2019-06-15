@@ -12,7 +12,7 @@ final class xcode_simulator_toolTests: XCTestCase {
             return
         }
 
-        let fooBinary = productsDirectory.appendingPathComponent("xcode-simulator-tool")
+        let fooBinary = productsDirectory.appendingPathComponent("xcode-simulator-cert")
 
         let process = Process()
         process.executableURL = fooBinary

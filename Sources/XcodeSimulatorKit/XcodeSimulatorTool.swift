@@ -39,7 +39,7 @@ public class XcodeSimulatorTool {
         case .noCommand:
             options.printUsage(on: stdoutStream)
         case .version:
-            print("xcode-simulator-tool version \(XcodeSimulatorTool.version)")
+            print("xcode-simulator-cert version \(XcodeSimulatorTool.version)")
         case .command(let command):
             try command.run(reporter: DefaultReporter(verbosity: options.verbosity))
         }

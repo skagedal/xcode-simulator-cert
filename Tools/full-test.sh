@@ -39,8 +39,8 @@ fi
 
 echo "${LOGO} Installing root certificate"
 pushd .. >& /dev/null
-echo swift run xcode-simulator-tool --verbosity=loud install-ca ${CERT_PATH} --uuid=${UUID}
-swift run xcode-simulator-tool --verbosity=loud install-ca ${CERT_PATH} --uuid=${UUID}
+echo swift run xcode-simulator-cert --verbosity=loud install-ca ${CERT_PATH} --uuid=${UUID}
+swift run xcode-simulator-cert --verbosity=loud install-ca ${CERT_PATH} --uuid=${UUID}
 popd >& /dev/null
 
 # Booting

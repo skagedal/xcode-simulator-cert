@@ -3,11 +3,11 @@
 import PackageDescription
 
 let package = Package(
-    name: "xcode-simulator-tool",
+    name: "xcode-simulator-cert",
     products: [
        .executable(
-           name: "xcode-simulator-tool",
-           targets: ["xcode-simulator-tool"]
+           name: "xcode-simulator-cert",
+           targets: ["xcode-simulator-cert"]
        )
     ],
     dependencies: [
@@ -17,14 +17,14 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "xcode-simulator-tool",
+            name: "xcode-simulator-cert",
             dependencies: [
                 "XcodeSimulatorKit"
             ]),
         .testTarget(
-            name: "xcode-simulator-toolTests",
+            name: "xcode-simulator-certTests",
             dependencies: [
-                "xcode-simulator-tool"
+                "xcode-simulator-cert"
             ]),
         .target(
             name: "XcodeSimulatorKit",

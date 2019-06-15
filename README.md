@@ -1,4 +1,4 @@
-# xcode-simulator-tool
+# xcode-simulator-cert
 
 [![Swift 5 compatible][swift-badge]][Swift] [![Xcode 10.2 compatible][xcode-badge]][Xcode] 
 
@@ -7,13 +7,13 @@ This is a tool to manage Xcode simulators and their [root certificates][RootCert
 If you have a certificate for your server in PEM format in a file `myhost.crt`, type:
 
 ```bash
-$ xcode-simulator-tool install-ca myhost.crt
+$ xcode-simulator-cert install-ca myhost.crt
 ```
 
 It will then install the certificate in all your simulators. You can also specify a specific simulator:
 
 ```bash
-$ xcode-simulator-tool install-ca myhost.crt --device-name="iPhone 8"
+$ xcode-simulator-cert install-ca myhost.crt --device-name="iPhone 8"
 ```
 
 There are also some other subcommands and options available. `--help` is your friend.
@@ -25,7 +25,7 @@ There are also some other subcommands and options available. `--help` is your fr
 [Homebrew] is the de-facto standard package manager for macOS open-source tools and other things.
 
 ```bash
-$ brew install skagedal/formulae/xcode-simulator-tool
+$ brew install skagedal/formulae/xcode-simulator-cert
 ```
 
 ### Using Mint
@@ -33,16 +33,16 @@ $ brew install skagedal/formulae/xcode-simulator-tool
 [Mint] is a pretty nice package manager for Swift Package Manager-based projects, such as this one. 
 
 ```bash
-$ mint install skagedal/xcode-simulator-tool
+$ mint install skagedal/xcode-simulator-cert
 ```
 
 ## Development
 
-If you'd like to hack on `xcode-simulator-tool`, you may run `generate-xcodeproj.sh` to generate an Xcode project. 
+If you'd like to hack on `xcode-simulator-cert`, you may run `generate-xcodeproj.sh` to generate an Xcode project. 
 
 ## Acknowledgements
 
-This tool is largely based on the work of Daniel Cerutti and his [ADVTrustStore] tool.  `xcode-simulator-tool` doesn't do much more than what his tool does at the moment.  I mostly just wanted to rewrite it in Swift.
+This tool is largely based on the work of Daniel Cerutti and his [ADVTrustStore] tool.  `xcode-simulator-cert` doesn't do much more than what his tool does at the moment.  I mostly just wanted to rewrite it in Swift.
 
 [ADVTrustStore]: https://github.com/ADVTOOLS/ADVTrustStore
 [Homebrew]: https://brew.sh
