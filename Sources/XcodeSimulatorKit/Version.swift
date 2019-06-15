@@ -4,6 +4,6 @@
 
 public extension XcodeSimulatorCert {
     static var version: String {
-        return "0.2.0"
+        return "0.2.1"
     }
 }
